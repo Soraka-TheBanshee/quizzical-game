@@ -1,5 +1,4 @@
 import React from 'react'
-import Background from './Background'
 
 interface StartingLayoutProps {
   startHandler: () => void
