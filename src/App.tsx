@@ -7,38 +7,37 @@ import Background from './components/Background';
 import CheckQuizBtn from './components/CheckQuizBtn';
 import StartingLayout from './components/StartingLayout';
 import Results from './components/Results';
+import { fetchQuizzles, useFetchQuizzlesState } from './hooks/hooks';
 
 
-interface APIResponseResults {
-  correct_answer: string
-  incorrect_answers: string[]
-  question: string
-}
+
 
 function App() {
 
-  const [quizzles, setQuizzles] = useState<IQuizzle[]>([])
+  // const [quizzles, setQuizzles] = useState<IQuizzle[]>([])
   const [isQuizzDone, setQuizzDone] = useState<boolean>(false)
   const [isGameStarted, setGameStarted] = useState<boolean>(false)
   const [finalResult, setFinalResult] = useState<string>('0')
 
-  const fetchQuizzles = async () => {
-    const response = await axios.get('https://opentdb.com/api.php?amount=7');
+  // const fetchQuizzles = async () => {
+  //   const response = await axios.get('https://opentdb.com/api.php?amount=7');
 
-    const fetchedQuizzles = response.data.results
+  //   const fetchedQuizzles = response.data.results
 
-    setQuizzles(() => fetchedQuizzles.map((q:APIResponseResults):IQuizzle => ({id: nanoid(), 
-      question: q.question, 
-      correct_answer: q.correct_answer, 
-      answers: [...q.incorrect_answers, q.correct_answer].map(a => ({ id: nanoid(), value: a, isChecked: false }))
-    })));
+  //   setQuizzles(() => fetchedQuizzles.map((q:APIResponseResults):IQuizzle => ({id: nanoid(), 
+  //     question: q.question, 
+  //     correct_answer: q.correct_answer, 
+  //     answers: [...q.incorrect_answers, q.correct_answer].map(a => ({ id: nanoid(), value: a, isChecked: false }))
+  //   })));
     
     
-  }
+  // }
   
-  useEffect(() => {
-    fetchQuizzles()
-  }, [])
+  // useEffect(() => {
+  //   fetchQuizzles()
+  // }, [])
+
+  const [quizzles, setQuizzles] = useFetchQuizzlesState()
 
   const answerHandler = (quizzleId: string, answerId: string):void => {    
     !isQuizzDone&&setQuizzles(oldQuizzles => oldQuizzles.map(q => {      
@@ -57,7 +56,7 @@ function App() {
 
   const startNewQuizz = () => {
     setQuizzDone(false)
-    fetchQuizzles()
+    fetchQuizzles(setQuizzles)
   }
 
   const checkFinalResult = () => {
